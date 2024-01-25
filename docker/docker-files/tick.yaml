@@ -1,0 +1,25 @@
+version: '3.7'
+services:
+  telegraf:
+    container_name: telegraf
+    image: telegraf
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf
+    ports:
+      - 8125:8125/udp
+  influxdb:
+    container_name: influxdb
+    image: influxdb:1.8
+    ports:
+      - 8086:8086
+  chronograf:
+    container_name: chronograf
+    image: chronograf
+    ports:
+      - 8888:8888
+    command: ["chronograf", "--influxdb-url=http://influxdb:8086"]
+  kapacitor:
+    container_name: kapacitor
+    image: kapacitor
+    environment:
+      - KAPACITOR_INFLUXDB_0_URLS_0=http://influxdb:8086
